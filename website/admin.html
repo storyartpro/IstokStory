@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - MovieLunch.ru</title>
+    <style>
+        :root {
+            --primary-color: #d4af37;
+            --dark-bg: #121212;
+            --dark-card: #1e1e1e;
+            --light-text: #f5f5f5;
+            --secondary-text: #aaaaaa;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --info: #2196F3;
+            --neutral: #9E9E9E;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--primary-color);
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .admin-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+        
+        .card {
+            background-color: var(--dark-card);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--secondary-text);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background-color: #2a2a2a;
+            color: var(--light-text);
+            font-size: 16px;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: var(--dark-bg);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #b8971f;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+        
+        .task-list {
+            margin-top: 20px;
+        }
+        
+        .task-item {
+            background-color: #2a2a2a;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .task-info {
+            flex: 1;
+        }
+        
+        .task-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .task-meta {
+            font-size: 14px;
+            color: var(--secondary-text);
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .status-high {
+            color: var(--danger);
+        }
+        
+        .status-medium {
+            color: var(--warning);
+        }
+        
+        .status-low {
+            color: var(--info);
+        }
+        
+        .status-completed {
+            color: var(--success);
+        }
+        
+        .status-waiting {
+            color: var(--neutral);
+        }
+        
+        .status-in-progress {
+            color: var(--info);
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: transparent;
+            color: var(--secondary-text);
+            border: none;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .section-title {
+            margin: 30px 0 20px;
+            color: var(--primary-color);
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+        
+        .save-message {
+            background-color: var(--success);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .task-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .task-actions {
+                margin-top: 10px;
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="#" class="logo">ML</a>
+            <h1>Админ-панель</h1>
+            <a href="https://lgzqkodc.manus.space" target="_blank">Перейти на сайт</a>
+        </header>
+        
+        <div class="save-message" id="saveMessage">Изменения успешно сохранены!</div>
+        
+        <div class="tabs">
+            <button class="tab active" data-tab="tasks">Ход работы</button>
+            <button class="tab" data-tab="content">Контент сайта</button>
+            <button class="tab" data-tab="settings">Настройки</button>
+        </div>
+        
+        <div class="tab-content active" id="tasks">
+            <h2 class="section-title">Управление задачами</h2>
+            
+            <div class="card">
+                <h3>Добавить новую задачу</h3>
+                <form id="addTaskForm">
+                    <div class="form-group">
+                        <label for="taskTitle">Название задачи</label>
+                        <input type="text" id="taskTitle" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskDescription">Подробное описание</label>
+                        <textarea id="taskDescription"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskCategory">Категория</label>
+                        <select id="taskCategory">
+                            <option value="design">Дизайн</option>
+                            <option value="site">Сайт</option>
+                            <option value="yandex">Яндекс.Бизнес</option>
+                            <option value="strategy">Стратегия</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskUrgency">Срочность</label>
+                        <select id="taskUrgency">
+                            <option value="high">Высокая</option>
+                            <option value="medium">Средняя</option>
+                            <option value="low">Низкая</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskDeadline">Срок выполнения</label>
+                        <input type="date" id="taskDeadline">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskStatus">Статус</label>
+                        <select id="taskStatus">
+                            <option value="waiting">Ожидание</option>
+                            <option value="in-progress">В процессе</option>
+                            <option value="completed">Завершено</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit">Добавить задачу</button>
+                </form>
+            </div>
+            
+            <h3>Задачи по направлению "Дизайн"</h3>
+            <div class="task-list" id="designTasks">
+                <div class="task-item" data-id="1">
+                    <div class="task-info">
+                        <div class="task-title">Разработка логотипа и фирменного стиля</div>
+                        <div class="task-meta">
+                            <span class="status-high">Высокая срочность</span> | 
+                            <span>Срок: 30.06.2025</span> | 
+                            <span class="status-in-progress">В процессе</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="edit-task">Редактировать</button>
+                        <button class="btn-danger delete-task">Удалить</button>
+                    </div>
+                </div>
+                
+                <div class="task-item" data-id="2">
+                    <div class="task-info">
+                        <div class="task-title">Создание гайдбука</div>
+                        <div class="task-meta">
+                            <span class="status-medium">Средняя срочность</span> | 
+                            <span>Срок: 15.07.2025</span> | 
+                            <span class="status-waiting">Ожидание</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="edit-task">Редактировать</button>
+                        <button class="btn-danger delete-task">Удалить</button>
+                    </div>
+                </div>
+                
+                <div class="task-item" data-id="3">
+                    <div class="task-info">
+                        <div class="task-title">Профессиональная фотосъемка блюд</div>
+                        <div class="task-meta">
+                            <span class="status-high">Высокая срочность</span> | 
+                            <span>Срок: 10.07.2025</span> | 
+                            <span class="status-waiting">Ожидание</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="edit-task">Редактировать</button>
+                        <button class="btn-danger delete-task">Удалить</button>
+                    </div>
+                </div>
+                
+                <div class="task-item" data-id="4">
+                    <div class="task-info">
+                        <div class="task-title">Обработка и оптимизация фотографий</div>
+                        <div class="task-meta">
+                            <span class="status-medium">Средняя срочность</span> | 
+                            <span>Срок: 20.07.2025</span> | 
+                            <span class="status-waiting">Ожидание</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="edit-task">Редактировать</button>
+                        <button class="btn-danger delete-task">Удалить</button>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Задачи по направлению "Сайт"</h3>
+            <div class="task-list" id="siteTasks">
+                <div class="task-item" data-id="5">
+                    <div class="task-info">
+                        <div class="task-title">Базовая SEO-оптимизация</div>
+                        <div class="task-meta">
+                            <span class="status-high">Высокая срочность</span> | 
+                            <span>Срок: 05.06.2025</span> | 
+                            <span class="status-completed">Завершено</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="edit-task">Редактировать</button>
+                        <button class="btn-danger delete-task">Удалить</button>
+                    </div>
+                </div>
+                
+                <div class="task-item" data-id="6">
+                    <div class="task-info">
+                        <div class="task-title">Оптимизация структуры сайта</div>
+                        <div class="task-meta">
+                            <span class="status-high">Высокая срочность</span> | 
+                            <span>Срок: 15.06.2025</span> | 
+                            <span class="status-in-progress">В процессе</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="edit-task">Редактировать</button>
+                        <button class="btn-danger delete-task">Удалить</button>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Задачи по направлению "Яндекс.Бизнес"</h3>
+            <div class="task-list" id="yandexTasks">
+                <div class="task-item" data-id="7">
+                    <div class="task-info">
+                        <div class="task-title">Оптимизация профиля в Яндекс.Бизнес</div>
+                        <div class="task-meta">
+                            <span class="status-medium">Средняя срочность</span> | 
+                            <span>Срок: 10.06.2025</span> | 
+                            <span class="status-in-progress">В процессе</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="edit-task">Редактировать</button>
+                        <button class="btn-danger delete-task">Удалить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="content">
+            <h2 class="section-title">Управление контентом сайта</h2>
+            
+            <div class="card">
+                <h3>Заголовок и описание главной страницы</h3>
+                <form id="mainContentForm">
+                    <div class="form-group">
+                        <label for="mainTitle">Главный заголовок</label>
+                        <input type="text" id="mainTitle" value="Для улучшения маркетинговой стратегии бренда MovieLunch.ru">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="buttonText">Текст кнопки</label>
+                        <input type="text" id="buttonText" value="Изучить детали">
+                    </div>
+                    
+                    <button type="submit">Сохранить изменения</button>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h3>Раздел "Анализ"</h3>
+                <form id="analysisForm">
+                    <div class="form-group">
+                        <label for="analysisTitle">Заголовок раздела</label>
+                        <input type="text" id="analysisTitle" value="Анализ текущего состояния">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="positioningTitle">Подзаголовок "Позиционирование"</label>
+                        <input type="text" id="positioningTitle" value="Текущее позиционирование бренда">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="positioningContent">Содержание "Позиционирование"</label>
+                        <textarea id="positioningContent">MovieLunch.ru позиционируется как специализированный кейтеринг для киноиндустрии, предлагающий услуги питания на съемочных площадках. Основная ценность бренда заключается в понимании специфики киноиндустрии и адаптации услуг под её потребности.
+
+Бренд находится на начальном этапе развития, имеет базовый сайт и минимальное присутствие в онлайн-среде. Текущая маркетинговая стратегия ориентирована преимущественно на прямые продажи и рекомендации.</textarea>
+                    </div>
+                    
+                    <button type="submit">Сохранить изменения</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="settings">
+            <h2 class="section-title">Настройки сайта</h2>
+            
+            <div class="card">
+                <h3>Основные настройки</h3>
+                <form id="settingsForm">
+                    <div class="form-group">
+                        <label for="siteName">Название сайта</label>
+                        <input type="text" id="siteName" value="Аналитический отчёт и рекомендации для movielunch.ru">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactInfo">Контактная информация</label>
+                        <textarea id="contactInfo">STORYART
+Digital Studio
+
+Мы специализируемся на разработке и продвижении брендов в цифровой среде. Наша команда профессионалов поможет вам создать уникальный образ и привлечь целевую аудиторию.</textarea>
+                    </div>
+                    
+                    <button type="submit">Сохранить настройки</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно для редактирования задачи -->
+    <div id="editTaskModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 600px; background-color: var(--dark-card); padding: 20px; border-radius: 8px;">
+            <h3 style="margin-bottom: 20px;">Редактирование задачи</h3>
+            
+            <form id="editTaskForm">
+                <input type="hidden" id="editTaskId">
+                
+                <div class="form-group">
+                    <label for="editTaskTitle">Название задачи</label>
+                    <input type="text" id="editTaskTitle" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editTaskDescription">Подробное описание</label>
+                    <textarea id="editTaskDescription"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editTaskCategory">Категория</label>
+                    <select id="editTaskCategory">
+                        <option value="design">Дизайн</option>
+                        <option value="site">Сайт</option>
+                        <option value="yandex">Яндекс.Бизнес</option>
+                        <option value="strategy">Стратегия</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editTaskUrgency">Срочность</label>
+                    <select id="editTaskUrgency">
+                        <option value="high">Высокая</option>
+                        <option value="medium">Средняя</option>
+                        <option value="low">Низкая</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editTaskDeadline">Срок выполнения</label>
+                    <input type="date" id="editTaskDeadline">
+                </div>
+                
+                <div class="form-group">
+                    <label for="editTaskStatus">Статус</label>
+                    <select id="editTaskStatus">
+                        <option value="waiting">Ожидание</option>
+                        <option value="in-progress">В процессе</option>
+                        <option value="completed">Завершено</option>
+                    </select>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                    <button type="button" id="cancelEdit" style="background-color: #555;">Отмена</button>
+                    <button type="submit">Сохранить изменения</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Переключение вкладок
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Удаляем активный класс у всех вкладок и контента
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Добавляем активный класс выбранной вкладке и контенту
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Обработка добавления новой задачи
+            const addTaskForm = document.getElementById('addTaskForm');
+            
+            addTaskForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const title = document.getElementById('taskTitle').value;
+                const description = document.getElementById('taskDescription').value;
+                const category = document.getElementById('taskCategory').value;
+                const urgency = document.getElementById('taskUrgency').value;
+                const deadline = document.getElementById('taskDeadline').value;
+                const status = document.getElementById('taskStatus').value;
+                
+                // Создаем новую задачу
+                const taskId = Date.now(); // Используем timestamp как ID
+                const taskItem = createTaskItem(taskId, title, urgency, formatDate(deadline), status);
+                
+                // Добавляем задачу в соответствующий список
+                let targetList;
+                switch(category) {
+                    case 'design':
+                        targetList = document.getElementById('designTasks');
+                        break;
+                    case 'site':
+                        targetList = document.getElementById('siteTasks');
+                        break;
+                    case 'yandex':
+                        targetList = document.getElementById('yandexTasks');
+                        break;
+                    case 'strategy':
+                        // Если нет списка для стратегии, можно создать
+                        if (!document.getElementById('strategyTasks')) {
+                            const h3 = document.createElement('h3');
+                            h3.textContent = 'Задачи по направлению "Стратегия"';
+                            const div = document.createElement('div');
+                            div.className = 'task-list';
+                            div.id = 'strategyTasks';
+                            
+                            const tasksTab = document.getElementById('tasks');
+                            tasksTab.appendChild(h3);
+                            tasksTab.appendChild(div);
+                        }
+                        targetList = document.getElementById('strategyTasks');
+                        break;
+                }
+                
+                targetList.appendChild(taskItem);
+                
+                // Сохраняем данные в localStorage
+                saveTaskToLocalStorage(taskId, {
+                    title,
+                    description,
+                    category,
+                    urgency,
+                    deadline,
+                    status
+                });
+                
+                // Очищаем форму
+                addTaskForm.reset();
+                
+                // Показываем сообщение об успешном сохранении
+                showSaveMessage();
+            });
+            
+            // Обработка редактирования и удаления задач
+            document.addEventListener('click', function(e) {
+                // Редактирование задачи
+                if (e.target.classList.contains('edit-task')) {
+                    const taskItem = e.target.closest('.task-item');
+                    const taskId = taskItem.getAttribute('data-id');
+                    
+                    // Получаем данные задачи из localStorage
+                    const taskData = getTaskFromLocalStorage(taskId);
+                    
+                    if (taskData) {
+                        // Заполняем форму редактирования
+                        document.getElementById('editTaskId').value = taskId;
+                        document.getElementById('editTaskTitle').value = taskData.title;
+                        document.getElementById('editTaskDescription').value = taskData.description || '';
+                        document.getElementById('editTaskCategory').value = taskData.category;
+                        document.getElementById('editTaskUrgency').value = taskData.urgency;
+                        document.getElementById('editTaskDeadline').value = taskData.deadline;
+                        document.getElementById('editTaskStatus').value = taskData.status;
+                        
+                        // Показываем модальное окно
+                        document.getElementById('editTaskModal').style.display = 'block';
+                    }
+                }
+                
+                // Удаление задачи
+                if (e.target.classList.contains('delete-task')) {
+                    if (confirm('Вы уверены, что хотите удалить эту задачу?')) {
+                        const taskItem = e.target.closest('.task-item');
+                        const taskId = taskItem.getAttribute('data-id');
+                        
+                        // Удаляем задачу из DOM
+                        taskItem.remove();
+                        
+                        // Удаляем задачу из localStorage
+                        removeTaskFromLocalStorage(taskId);
+                        
+                        // Показываем сообщение об успешном удалении
+                        showSaveMessage('Задача успешно удалена!');
+                    }
+                }
+            });
+            
+            // Обработка формы редактирования задачи
+            const editTaskForm = document.getElementById('editTaskForm');
+            
+            editTaskForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const taskId = document.getElementById('editTaskId').value;
+                const title = document.getElementById('editTaskTitle').value;
+                const description = document.getElementById('editTaskDescription').value;
+                const category = document.getElementById('editTaskCategory').value;
+                const urgency = document.getElementById('editTaskUrgency').value;
+                const deadline = document.getElementById('editTaskDeadline').value;
+                const status = document.getElementById('editTaskStatus').value;
+                
+                // Обновляем данные в localStorage
+                saveTaskToLocalStorage(taskId, {
+                    title,
+                    description,
+                    category,
+                    urgency,
+                    deadline,
+                    status
+                });
+                
+                // Обновляем отображение задачи в DOM
+                const taskItem = document.querySelector(`.task-item[data-id="${taskId}"]`);
+                
+                if (taskItem) {
+                    // Проверяем, изменилась ли категория
+                    const oldCategory = getTaskFromLocalStorage(taskId).category;
+                    
+                    if (oldCategory !== category) {
+                        // Если категория изменилась, перемещаем задачу в другой список
+                        taskItem.remove();
+                        
+                        let targetList;
+                        switch(category) {
+                            case 'design':
+                                targetList = document.getElementById('designTasks');
+                                break;
+                            case 'site':
+                                targetList = document.getElementById('siteTasks');
+                                break;
+                            case 'yandex':
+                                targetList = document.getElementById('yandexTasks');
+                                break;
+                            case 'strategy':
+                                if (!document.getElementById('strategyTasks')) {
+                                    const h3 = document.createElement('h3');
+                                    h3.textContent = 'Задачи по направлению "Стратегия"';
+                                    const div = document.createElement('div');
+                                    div.className = 'task-list';
+                                    div.id = 'strategyTasks';
+                                    
+                                    const tasksTab = document.getElementById('tasks');
+                                    tasksTab.appendChild(h3);
+                                    tasksTab.appendChild(div);
+                                }
+                                targetList = document.getElementById('strategyTasks');
+                                break;
+                        }
+                        
+                        const newTaskItem = createTaskItem(taskId, title, urgency, formatDate(deadline), status);
+                        targetList.appendChild(newTaskItem);
+                    } else {
+                        // Если категория не изменилась, просто обновляем содержимое
+                        const titleElement = taskItem.querySelector('.task-title');
+                        const metaElement = taskItem.querySelector('.task-meta');
+                        
+                        titleElement.textContent = title;
+                        
+                        // Обновляем мета-информацию
+                        let urgencyClass = '';
+                        let urgencyText = '';
+                        
+                        switch(urgency) {
+                            case 'high':
+                                urgencyClass = 'status-high';
+                                urgencyText = 'Высокая срочность';
+                                break;
+                            case 'medium':
+                                urgencyClass = 'status-medium';
+                                urgencyText = 'Средняя срочность';
+                                break;
+                            case 'low':
+                                urgencyClass = 'status-low';
+                                urgencyText = 'Низкая срочность';
+                                break;
+                        }
+                        
+                        let statusClass = '';
+                        let statusText = '';
+                        
+                        switch(status) {
+                            case 'waiting':
+                                statusClass = 'status-waiting';
+                                statusText = 'Ожидание';
+                                break;
+                            case 'in-progress':
+                                statusClass = 'status-in-progress';
+                                statusText = 'В процессе';
+                                break;
+                            case 'completed':
+                                statusClass = 'status-completed';
+                                statusText = 'Завершено';
+                                break;
+                        }
+                        
+                        metaElement.innerHTML = `
+                            <span class="${urgencyClass}">${urgencyText}</span> | 
+                            <span>Срок: ${formatDate(deadline)}</span> | 
+                            <span class="${statusClass}">${statusText}</span>
+                        `;
+                    }
+                }
+                
+                // Закрываем модальное окно
+                document.getElementById('editTaskModal').style.display = 'none';
+                
+                // Показываем сообщение об успешном сохранении
+                showSaveMessage();
+            });
+            
+            // Закрытие модального окна
+            document.getElementById('cancelEdit').addEventListener('click', function() {
+                document.getElementById('editTaskModal').style.display = 'none';
+            });
+            
+            // Обработка форм управления контентом
+            const mainContentForm = document.getElementById('mainContentForm');
+            const analysisForm = document.getElementById('analysisForm');
+            const settingsForm = document.getElementById('settingsForm');
+            
+            mainContentForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Сохраняем данные в localStorage
+                localStorage.setItem('mainTitle', document.getElementById('mainTitle').value);
+                localStorage.setItem('buttonText', document.getElementById('buttonText').value);
+                
+                showSaveMessage();
+            });
+            
+            analysisForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Сохраняем данные в localStorage
+                localStorage.setItem('analysisTitle', document.getElementById('analysisTitle').value);
+                localStorage.setItem('positioningTitle', document.getElementById('positioningTitle').value);
+                localStorage.setItem('positioningContent', document.getElementById('positioningContent').value);
+                
+                showSaveMessage();
+            });
+            
+            settingsForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Сохраняем данные в localStorage
+                localStorage.setItem('siteName', document.getElementById('siteName').value);
+                localStorage.setItem('contactInfo', document.getElementById('contactInfo').value);
+                
+                showSaveMessage();
+            });
+            
+            // Загружаем сохраненные данные при загрузке страницы
+            loadSavedData();
+        });
+        
+        // Функция для создания элемента задачи
+        function createTaskItem(id, title, urgency, deadline, status) {
+            const taskItem = document.createElement('div');
+            taskItem.className = 'task-item';
+            taskItem.setAttribute('data-id', id);
+            
+            let urgencyClass = '';
+            let urgencyText = '';
+            
+            switch(urgency) {
+                case 'high':
+                    urgencyClass = 'status-high';
+                    urgencyText = 'Высокая срочность';
+                    break;
+                case 'medium':
+                    urgencyClass = 'status-medium';
+                    urgencyText = 'Средняя срочность';
+                    break;
+                case 'low':
+                    urgencyClass = 'status-low';
+                    urgencyText = 'Низкая срочность';
+                    break;
+            }
+            
+            let statusClass = '';
+            let statusText = '';
+            
+            switch(status) {
+                case 'waiting':
+                    statusClass = 'status-waiting';
+                    statusText = 'Ожидание';
+                    break;
+                case 'in-progress':
+                    statusClass = 'status-in-progress';
+                    statusText = 'В процессе';
+                    break;
+                case 'completed':
+                    statusClass = 'status-completed';
+                    statusText = 'Завершено';
+                    break;
+            }
+            
+            taskItem.innerHTML = `
+                <div class="task-info">
+                    <div class="task-title">${title}</div>
+                    <div class="task-meta">
+                        <span class="${urgencyClass}">${urgencyText}</span> | 
+                        <span>Срок: ${deadline}</span> | 
+                        <span class="${statusClass}">${statusText}</span>
+                    </div>
+                </div>
+                <div class="task-actions">
+                    <button class="edit-task">Редактировать</button>
+                    <button class="btn-danger delete-task">Удалить</button>
+                </div>
+            `;
+            
+            return taskItem;
+        }
+        
+        // Функция для форматирования даты
+        function formatDate(dateString) {
+            if (!dateString) return 'Не указан';
+            
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ru-RU');
+        }
+        
+        // Функции для работы с localStorage
+        function saveTaskToLocalStorage(id, taskData) {
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || {};
+            tasks[id] = taskData;
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+        
+        function getTaskFromLocalStorage(id) {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || {};
+            return tasks[id];
+        }
+        
+        function removeTaskFromLocalStorage(id) {
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || {};
+            delete tasks[id];
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+        
+        // Функция для загрузки сохраненных данных
+        function loadSavedData() {
+            // Загружаем данные контента
+            if (localStorage.getItem('mainTitle')) {
+                document.getElementById('mainTitle').value = localStorage.getItem('mainTitle');
+            }
+            
+            if (localStorage.getItem('buttonText')) {
+                document.getElementById('buttonText').value = localStorage.getItem('buttonText');
+            }
+            
+            if (localStorage.getItem('analysisTitle')) {
+                document.getElementById('analysisTitle').value = localStorage.getItem('analysisTitle');
+            }
+            
+            if (localStorage.getItem('positioningTitle')) {
+                document.getElementById('positioningTitle').value = localStorage.getItem('positioningTitle');
+            }
+            
+            if (localStorage.getItem('positioningContent')) {
+                document.getElementById('positioningContent').value = localStorage.getItem('positioningContent');
+            }
+            
+            if (localStorage.getItem('siteName')) {
+                document.getElementById('siteName').value = localStorage.getItem('siteName');
+            }
+            
+            if (localStorage.getItem('contactInfo')) {
+                document.getElementById('contactInfo').value = localStorage.getItem('contactInfo');
+            }
+            
+            // Загружаем задачи
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || {};
+            
+            for (const id in tasks) {
+                const task = tasks[id];
+                const taskItem = createTaskItem(
+                    id,
+                    task.title,
+                    task.urgency,
+                    formatDate(task.deadline),
+                    task.status
+                );
+                
+                // Добавляем задачу в соответствующий список
+                let targetList;
+                switch(task.category) {
+                    case 'design':
+                        targetList = document.getElementById('designTasks');
+                        break;
+                    case 'site':
+                        targetList = document.getElementById('siteTasks');
+                        break;
+                    case 'yandex':
+                        targetList = document.getElementById('yandexTasks');
+                        break;
+                    case 'strategy':
+                        if (!document.getElementById('strategyTasks')) {
+                            const h3 = document.createElement('h3');
+                            h3.textContent = 'Задачи по направлению "Стратегия"';
+                            const div = document.createElement('div');
+                            div.className = 'task-list';
+                            div.id = 'strategyTasks';
+                            
+                            const tasksTab = document.getElementById('tasks');
+                            tasksTab.appendChild(h3);
+                            tasksTab.appendChild(div);
+                        }
+                        targetList = document.getElementById('strategyTasks');
+                        break;
+                }
+                
+                if (targetList) {
+                    targetList.appendChild(taskItem);
+                }
+            }
+        }
+        
+        // Функция для отображения сообщения о сохранении
+        function showSaveMessage(message = 'Изменения успешно сохранены!') {
+            const saveMessage = document.getElementById('saveMessage');
+            saveMessage.textContent = message;
+            saveMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                saveMessage.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

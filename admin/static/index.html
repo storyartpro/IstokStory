@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - MovieLunch.ru</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="#" class="logo">ML</a>
+            <h1>Админ-панель</h1>
+            <div class="header-actions">
+                <span id="username-display"></span>
+                <a href="/" target="_blank" class="btn-secondary">Перейти на сайт</a>
+                <button id="logout-btn" class="btn-danger">Выйти</button>
+            </div>
+        </header>
+        
+        <div id="login-container" class="card">
+            <h2>Вход в админ-панель</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Имя пользователя</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div id="login-error" class="error-message"></div>
+                <button type="submit" class="btn-primary">Войти</button>
+            </form>
+        </div>
+
+        <div id="admin-container" style="display: none;">
+            <div class="save-message" id="saveMessage">Изменения успешно сохранены!</div>
+            
+            <div class="tabs">
+                <button class="tab active" data-tab="tasks">Ход работы</button>
+                <button class="tab" data-tab="content">Контент сайта</button>
+                <button class="tab" data-tab="settings">Настройки</button>
+            </div>
+            
+            <div class="tab-content active" id="tasks">
+                <h2 class="section-title">Управление задачами</h2>
+                
+                <div class="card">
+                    <h3>Добавить новую задачу</h3>
+                    <form id="addTaskForm">
+                        <div class="form-group">
+                            <label for="taskTitle">Название задачи</label>
+                            <input type="text" id="taskTitle" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="taskDescription">Подробное описание</label>
+                            <textarea id="taskDescription"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="taskCategory">Категория</label>
+                            <select id="taskCategory">
+                                <option value="design">Дизайн</option>
+                                <option value="site">Сайт</option>
+                                <option value="yandex">Яндекс.Бизнес</option>
+                                <option value="strategy">Стратегия</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="taskUrgency">Срочность</label>
+                            <select id="taskUrgency">
+                                <option value="high">Высокая</option>
+                                <option value="medium">Средняя</option>
+                                <option value="low">Низкая</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="taskDeadline">Срок выполнения</label>
+                            <input type="date" id="taskDeadline">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="taskStatus">Статус</label>
+                            <select id="taskStatus">
+                                <option value="waiting">Ожидание</option>
+                                <option value="in-progress">В процессе</option>
+                                <option value="completed">Завершено</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Добавить задачу</button>
+                    </form>
+                </div>
+                
+                <div class="task-categories">
+                    <h3>Задачи по направлению "Дизайн"</h3>
+                    <div class="task-list" id="designTasks"></div>
+                    
+                    <h3>Задачи по направлению "Сайт"</h3>
+                    <div class="task-list" id="siteTasks"></div>
+                    
+                    <h3>Задачи по направлению "Яндекс.Бизнес"</h3>
+                    <div class="task-list" id="yandexTasks"></div>
+                    
+                    <h3>Задачи по направлению "Стратегия"</h3>
+                    <div class="task-list" id="strategyTasks"></div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="content">
+                <h2 class="section-title">Управление контентом сайта</h2>
+                
+                <div class="card">
+                    <h3>Заголовок и описание главной страницы</h3>
+                    <form id="mainContentForm">
+                        <div class="form-group">
+                            <label for="mainTitle">Главный заголовок</label>
+                            <input type="text" id="mainTitle" value="Аналитический отчёт и рекомендации">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="mainSubtitle">Подзаголовок</label>
+                            <input type="text" id="mainSubtitle" value="Для улучшения маркетинговой стратегии бренда MovieLunch.ru">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="buttonText">Текст кнопки</label>
+                            <input type="text" id="buttonText" value="Изучить детали">
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Сохранить изменения</button>
+                    </form>
+                </div>
+                
+                <div class="card">
+                    <h3>Раздел "Анализ"</h3>
+                    <form id="analysisForm">
+                        <div class="form-group">
+                            <label for="analysisTitle">Заголовок раздела</label>
+                            <input type="text" id="analysisTitle" value="Анализ текущего состояния">
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Сохранить изменения</button>
+                    </form>
+                </div>
+                
+                <div class="card">
+                    <h3>Раздел "Рекомендации"</h3>
+                    <form id="recommendationsForm">
+                        <div class="form-group">
+                            <label for="recommendationsTitle">Заголовок раздела</label>
+                            <input type="text" id="recommendationsTitle" value="Рекомендации по улучшению">
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Сохранить изменения</button>
+                    </form>
+                </div>
+                
+                <div class="card">
+                    <h3>Раздел "Процесс"</h3>
+                    <form id="processForm">
+                        <div class="form-group">
+                            <label for="processTitle">Заголовок раздела</label>
+                            <input type="text" id="processTitle" value="Ход работы">
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Сохранить изменения</button>
+                    </form>
+                </div>
+                
+                <div class="card">
+                    <h3>Раздел "Контакты"</h3>
+                    <form id="contactsForm">
+                        <div class="form-group">
+                            <label for="contactsTitle">Заголовок раздела</label>
+                            <input type="text" id="contactsTitle" value="Контакты">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contactsCompany">Название компании</label>
+                            <input type="text" id="contactsCompany" value="STORYART - Digital Studio">
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Сохранить изменения</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="settings">
+                <h2 class="section-title">Настройки</h2>
+                
+                <div class="card">
+                    <h3>Изменить пароль</h3>
+                    <form id="changePasswordForm">
+                        <div class="form-group">
+                            <label for="currentPassword">Текущий пароль</label>
+                            <input type="password" id="currentPassword" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newPassword">Новый пароль</label>
+                            <input type="password" id="newPassword" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmPassword">Подтвердите новый пароль</label>
+                            <input type="password" id="confirmPassword" required>
+                        </div>
+                        
+                        <div id="password-error" class="error-message"></div>
+                        
+                        <button type="submit" class="btn-primary">Изменить пароль</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Модальное окно для редактирования задачи -->
+        <div id="editTaskModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Редактировать задачу</h3>
+                <form id="editTaskForm">
+                    <input type="hidden" id="editTaskId">
+                    
+                    <div class="form-group">
+                        <label for="editTaskTitle">Название задачи</label>
+                        <input type="text" id="editTaskTitle" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editTaskDescription">Подробное описание</label>
+                        <textarea id="editTaskDescription"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editTaskCategory">Категория</label>
+                        <select id="editTaskCategory">
+                            <option value="design">Дизайн</option>
+                            <option value="site">Сайт</option>
+                            <option value="yandex">Яндекс.Бизнес</option>
+                            <option value="strategy">Стратегия</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editTaskUrgency">Срочность</label>
+                        <select id="editTaskUrgency">
+                            <option value="high">Высокая</option>
+                            <option value="medium">Средняя</option>
+                            <option value="low">Низкая</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editTaskDeadline">Срок выполнения</label>
+                        <input type="date" id="editTaskDeadline">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editTaskStatus">Статус</label>
+                        <select id="editTaskStatus">
+                            <option value="waiting">Ожидание</option>
+                            <option value="in-progress">В процессе</option>
+                            <option value="completed">Завершено</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Сохранить изменения</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/admin.js"></script>
+</body>
+</html>

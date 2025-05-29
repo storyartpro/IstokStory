@@ -5,7 +5,8 @@
   "main": "admin/main.js",
   "scripts": {
     "start": "node admin/main.js",
-    "dev": "nodemon admin/main.js"
+    "dev": "nodemon admin/main.js",
+    "build": "echo 'Frontend assets are pre-built and located in admin/static'"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

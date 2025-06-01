@@ -16,12 +16,9 @@ app.use(express.static(path.join(__dirname, 'static')));
 
 // Database configuration
 const sequelize = new Sequelize({
-  dialect: 'mysql',
-  host: process.env.DB_HOST || 'localhost',
-  username: process.env.DB_USERNAME || 'root',
-  password: process.env.DB_PASSWORD || 'password',
-  database: process.env.DB_NAME || 'mydb',
-  port: process.env.DB_PORT || 3306
+  dialect: 'sqlite',
+  storage: path.join(__dirname, 'database.sqlite'),
+  logging: false
 });
 
 // Models
